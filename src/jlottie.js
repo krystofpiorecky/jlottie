@@ -13,6 +13,13 @@ let debugAnimation = false;
 let timeoutObj;
 let _useWebWorker = false;
 
+// shadow dom support
+// jLottie accesses elements by id and that stops working when they sit in a shadow dom component
+// fix: instead of accessing elements through document.getElementById
+// they will be accessed through querySelector on the container element
+const getAnimationComponent = (animationId, id) =>
+ animation[animationId]._renderObj.querySelector(`#${CSS.escape(id)}`);
+
 /**
  * Exposes a near-zero cost console logger.
  *
@@ -195,7 +202,7 @@ export function loadFrame(i, _currentFrame) {
         if (animation[i]._scene[m]._transform[n].refObj == refObj) {
           if (animation[i]._scene[m]._transform[n].fillSet) {
             if (animation[i]._scene[m]._transform[n].isGradient) {
-              const stops = document.getElementById(animation[i]._scene[m]._transform[n].fillObj).querySelectorAll("stop");
+              const stops = getAnimationComponent(i, animation[i]._scene[m]._transform[n].fillObj).querySelectorAll("stop");
               for (var o = 0; o < stops.length; o++) {
                 stops[o].setAttribute("offset", animation[i]._scene[m]._transform[n].offsets[m]);
                 stops[o].setAttribute("style", animation[i]._scene[m]._transform[n].styles[m]);
@@ -205,8 +212,8 @@ export function loadFrame(i, _currentFrame) {
             }
           } else {
             if (animation[i]._scene[m]._transform[n].refObjSet) {
-              const currentObj = document.getElementById(animation[i]._scene[m]._transform[n].refObj);
-              const currentObjOther = document.getElementById(
+              const currentObj = getAnimationComponent(i, animation[i]._scene[m]._transform[n].refObj);
+              const currentObjOther = getAnimationComponent(i, 
                 animation[i]._scene[m]._transform[n].refObjOther,
               );
               if (animation[i]._scene[m]._transform[n].isTween) {
@@ -238,12 +245,12 @@ export function loadFrame(i, _currentFrame) {
               break;
             }
             if (animation[i]._scene[m]._transform[n].hide && animation[i]._scene[m]._transform[n].stageEvent) {
-              document.getElementById(
+              getAnimationComponent(i, 
                 animation[i]._scene[m]._transform[n].stageObj,
               ).style.display = 'none';
             }
             if (animation[i]._scene[m]._transform[n].show && animation[i]._scene[m]._transform[n].stageEvent) {
-              document.getElementById(
+              getAnimationComponent(i, 
                 animation[i]._scene[m]._transform[n].stageObj,
               ).style.display = 'block';
             }            
@@ -285,7 +292,7 @@ export function lottiemate() {
         for (let j = 0; j < animation[i]._scene[animation[i]._currentFrame]._transform.length; j++) {
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].fillSet) {
             if (animation[i]._scene[animation[i]._currentFrame]._transform[j].isGradient) {
-              const stops = document.getElementById(animation[i]._scene[animation[i]._currentFrame]._transform[j].fillObj).querySelectorAll("stop");
+              const stops = getAnimationComponent(i, animation[i]._scene[animation[i]._currentFrame]._transform[j].fillObj).querySelectorAll("stop");
               for (var m = 0; m < stops.length; m++) {
                 stops[m].setAttribute("offset", animation[i]._scene[animation[i]._currentFrame]._transform[j].offsets[m]);
                 stops[m].setAttribute("style", animation[i]._scene[animation[i]._currentFrame]._transform[j].styles[m]);
@@ -295,8 +302,8 @@ export function lottiemate() {
             }
           }
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].refObjSet) {
-            const currentObj = document.getElementById(animation[i]._scene[animation[i]._currentFrame]._transform[j].refObj);
-            const currentObjOther = document.getElementById(
+            const currentObj = getAnimationComponent(i, animation[i]._scene[animation[i]._currentFrame]._transform[j].refObj);
+            const currentObjOther = getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].refObjOther
             );
             if (animation[i]._scene[animation[i]._currentFrame]._transform[j].isTween) {
@@ -328,12 +335,12 @@ export function lottiemate() {
             }
           }
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].hide && animation[i]._scene[animation[i]._currentFrame]._transform[j].stageEvent) {
-            document.getElementById(
+            getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].stageObj,
             ).style.display = 'none';
           }
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].show && animation[i]._scene[animation[i]._currentFrame]._transform[j].stageEvent) {
-            document.getElementById(
+            getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].stageObj,
             ).style.display = 'block';
           }
@@ -479,7 +486,7 @@ export function fireWorker (animationId) {
       for (let j = 0; j < animation[i]._scene[animation[i]._currentFrame]._transform.length; j++) {
         if (animation[i]._scene[animation[i]._currentFrame]._transform[j].fillSet) {
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].isGradient) {
-            const stops = document.getElementById(animation[i]._scene[animation[i]._currentFrame]._transform[j].fillObj).querySelectorAll("stop");
+            const stops = getAnimationComponent(i, animation[i]._scene[animation[i]._currentFrame]._transform[j].fillObj).querySelectorAll("stop");
             for (var m = 0; m < stops.length; m++) {
               stops[m].setAttribute("offset", animation[i]._scene[animation[i]._currentFrame]._transform[j].offsets[m]);
               stops[m].setAttribute("style", animation[i]._scene[animation[i]._currentFrame]._transform[j].styles[m]);
@@ -489,8 +496,8 @@ export function fireWorker (animationId) {
           }
         } else {
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].refObjSet) {
-            const currentObj = document.getElementById(animation[i]._scene[animation[i]._currentFrame]._transform[j].refObj);
-            const currentObjOther = document.getElementById(
+            const currentObj = getAnimationComponent(i, animation[i]._scene[animation[i]._currentFrame]._transform[j].refObj);
+            const currentObjOther = getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].refObjOther,
             );
             if (animation[i]._scene[animation[i]._currentFrame]._transform[j].isTween) {
@@ -520,12 +527,12 @@ export function fireWorker (animationId) {
             );
           }
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].hide && animation[i]._scene[animation[i]._currentFrame]._transform[j].stageEvent) {
-            document.getElementById(
+            getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].stageObj,
             ).style.display = 'none';
           }
           if (animation[i]._scene[animation[i]._currentFrame]._transform[j].show && animation[i]._scene[animation[i]._currentFrame]._transform[j].stageEvent) {
-            document.getElementById(
+            getAnimationComponent(i, 
               animation[i]._scene[animation[i]._currentFrame]._transform[j].stageObj,
             ).style.display = 'block';
           }
@@ -907,11 +914,9 @@ export function addGroupPositionTransform(
   } else {
     animation[animationId]._refObj.push(transforms.refObj);
     animation[animationId]._objSize[transforms.refObj] = [];
-    animation[animationId]._objSize[transforms.refObj][0] = document
-      .getElementById(transforms.refObj)
+    animation[animationId]._objSize[transforms.refObj][0] = getAnimationComponent(animationId, transforms.refObj)
       .getBoundingClientRect().width;
-    animation[animationId]._objSize[transforms.refObj][1] = document
-      .getElementById(transforms.refObj)
+    animation[animationId]._objSize[transforms.refObj][1] = getAnimationComponent(animationId, transforms.refObj)
       .getBoundingClientRect().height;
   }
   const sizeObjFromTransform = animation[animationId]._objSize[transforms.refObj];
@@ -2275,22 +2280,17 @@ export function getColorString(redVal, greenVal, blueVal) {
 export function setShapeStrokes(shapesGroup, strokeToSet, animationId, isGradient) {
   for (let i = 0; i < shapesGroup.length; i++) {
     if (shapesGroup[i]._isShape) {
-      document.getElementById(`${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('stroke', strokeToSet.color);
-      document
-        .getElementById(`${animationId}_shape${shapesGroup[i]._shape}`)
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('stroke', strokeToSet.color);
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`)
         .setAttribute('stroke-width', strokeToSet.width);
-      document
-        .getElementById(`${animationId}_shape${shapesGroup[i]._shape}`)
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`)
         .setAttribute('stroke-linecap', strokeToSet.lineCap);
-      document
-        .getElementById(`${animationId}_shape${shapesGroup[i]._shape}`)
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`)
         .setAttribute('stroke-linejoin', strokeToSet.lineJoin);
-      document
-        .getElementById(`${animationId}_shape${shapesGroup[i]._shape}`)
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`)
         .setAttribute('stroke-opacity', strokeToSet.opacity);
       if (strokeToSet.lineJoin == 1) {
-        document
-          .getElementById(`${animationId}_shape${shapesGroup[i]._shape}`)
+        getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`)
           .setAttribute('stroke-miterlimit', strokeToSet.miterLimit);
       }
     }
@@ -2309,8 +2309,8 @@ export function setShapeStrokes(shapesGroup, strokeToSet, animationId, isGradien
 export function setShapeColors(shapesGroup, colorToSet, animationId, isGradient, isMasked) {
   for (let i = 0; i < shapesGroup.length; i++) {
     if (shapesGroup[i]._isShape && typeof colorToSet !== 'undefined') {
-      document.getElementById(`${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('fill', colorToSet);
-      document.getElementById(`${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('fill-opacity', 1);
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('fill', colorToSet);
+      getAnimationComponent(animationId, `${animationId}_shape${shapesGroup[i]._shape}`).setAttribute('fill-opacity', 1);
     }
   }
 }
@@ -2792,8 +2792,7 @@ export function getShapesGr(elementId, animationId, layerObj, referrer, refLabel
         if (layerObj.it[i].p.hasOwnProperty('k')) {
           if (layerObj.it[i].p.k.length > 1) {
             if (layerObj.it[i].hasOwnProperty('a')) {
-              document
-                .getElementById(refLabel)
+              getAnimationComponent(animationId, refLabel)
                 .setAttribute(
                   'transform',
                   `translate(${layerObj.it[i].p.k[0] - layerObj.it[i].a.k[0]},${
@@ -2801,8 +2800,7 @@ export function getShapesGr(elementId, animationId, layerObj, referrer, refLabel
                   })`,
                 );
             } else {
-              document
-                .getElementById(refLabel)
+              getAnimationComponent(animationId, refLabel)
                 .setAttribute('transform', `translate(${layerObj.it[i].p.k[0]},${layerObj.it[i].p.k[1]})`);
             }
           }
@@ -2914,8 +2912,7 @@ export function getShapes(elementId, animationId, layerObj, referrer, refLabel, 
         layerObj.shapes[i]._trIndex = i;
         if (layerObj.shapes[i].p.hasOwnProperty('k')) {
           if (layerObj.shapes[i].p.k > 1) {
-            document
-              .getElementById(`${animationId}_${depth}_layerGroup${layerObj._layer}`)
+            getAnimationComponent(animationId, `${animationId}_${depth}_layerGroup${layerObj._layer}`)
               .setAttribute('transform', `translate(${layerObj.shapes[i].p.k[0]},${layerObj.shapes[i].p.k[1]})`);
           }
         }
@@ -3252,12 +3249,10 @@ export function getLayers(elementId, animationId, elementObj, passedObj, passedK
               }
             } else {
               if (passedObj[passedKey][i].ind >= passedObj[passedKey][i]._parent) {
-                document
-                  .getElementById(`${animationId}_${depth}_layerTranslate${passedObj[passedKey][i]._parent}`)
+                getAnimationComponent(animationId, `${animationId}_${depth}_layerTranslate${passedObj[passedKey][i]._parent}`)
                   .prepend(passedObj[passedKey][i].domObj.newLayer);
               } else {
-                document
-                  .getElementById(`${animationId}_${depth}_layerTranslate${passedObj[passedKey][i]._parent}`)
+                getAnimationComponent(animationId, `${animationId}_${depth}_layerTranslate${passedObj[passedKey][i]._parent}`)
                   .append(passedObj[passedKey][i].domObj.newLayer);
               }
             }
@@ -3297,14 +3292,12 @@ export function getLayers(elementId, animationId, elementObj, passedObj, passedK
     );
 
     passedObj.layerCount = passedObj[passedKey][i]._layer;
-    newLayer = document.getElementById(`${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`);
-    newGroup = document.getElementById(`${animationId}_${depth}_layerGroup${passedObj[passedKey][i]._layer}`);
+    newLayer = getAnimationComponent(animationId, `${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`);
+    newGroup = getAnimationComponent(animationId, `${animationId}_${depth}_layerGroup${passedObj[passedKey][i]._layer}`);
     if (passedObj[passedKey][i].tt > 0) {
-      document
-        .getElementById(`${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`)
+      getAnimationComponent(animationId, `${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`)
         .setAttribute('mask', `url(#${passedObj[passedKey][i]._mask})`);
-      document
-        .getElementById(`${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`)
+      getAnimationComponent(animationId, `${animationId}_${depth}_layer${passedObj[passedKey][i]._layer}`)
         .setAttribute('style', 'display: block;');
     }
     passedObj._currentLayer = { _layer: '', _inPoint: '', _outPoint: '' };
@@ -3502,7 +3495,7 @@ export function scaleLayers(elementId, animationId, elementObj, passedObj, passe
         if (passedObj[passedKey][i].hasOwnProperty("parent")) {
         } else {
           //alert(animationId + "_" + depth + "_layer" + passedObj[passedKey][i]._layer);
-          currentObj = document.getElementById(animationId + "_" + depth + "_layer" + passedObj[passedKey][i]._layer);
+          currentObj = getAnimationComponent(animationId, animationId + "_" + depth + "_layer" + passedObj[passedKey][i]._layer);
           //currentObj.setAttributeNS(null, 'viewBox', `0 0 ${animation[animationId]._maxWidth} ${animation[animationId]._maxHeight}`);
           currentObj.setAttribute("transform", "scale(" + animation[animationId]._currScale + ")");
         }
@@ -3758,7 +3751,7 @@ export function destroy(name) {
           pause(name);
           animationCount -= 1;
           animation.splice(i, 1);
-          document.getElementById(name).innerHTML = '';
+          getAnimationComponent(i, name).innerHTML = '';
           break;
         }
       }
