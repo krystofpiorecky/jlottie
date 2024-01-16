@@ -2081,7 +2081,7 @@ export function createGradientDef(start, end, opacity, gradient, radial, animati
     }
   } else {
     newDef = document.createElementNS(xmlns, 'linearGradient');
-    if (gradient.k.k[0].hasOwnProperty('s')) {
+    // if (gradient.k.k[0].hasOwnProperty('s')) {
       newDef.setAttribute('spreadMethod', 'pad');
       newDef.setAttribute('gradientUnits', 'userSpaceOnUse');
       if (!Number.isNaN(start.k[0])) {
@@ -2096,7 +2096,7 @@ export function createGradientDef(start, end, opacity, gradient, radial, animati
       if (!Number.isNaN(end.k[1])) {
         newDef.setAttribute('y2', end.k[1]);
       }
-    }
+    // }
   }
   newDef.setAttribute('id', newDefId);
   animation[animationId].defs.prepend(newDef);
