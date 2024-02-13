@@ -1,11 +1,11 @@
 {
-  "name": "@lottiefiles/jlottie",
+  "name": "@krystofpiorecky/jlottie",
   "version": "1.2.1",
   "description": "Small size, low memory footprint, high performance Lottie player.",
   "main": "dist/jlottie.min.cjs.js",
   "module": "dist/jlottie.min.esm.js",
   "browser": "dist/jlottie.min.js",
-  "repository": "https://github.com/LottieFiles/jlottie.git",
+  "repository": "https://github.com/krystofpiorecky/jlottie.git",
   "author": "Mohamed Shaafiee <shaafiee@lottiefiles.com>",
   "license": "MIT",
   "files": [

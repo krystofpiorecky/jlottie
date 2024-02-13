@@ -1779,9 +1779,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lottiefiles/jlottie@workspace:.":
+"@krystofpiorecky/jlottie@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@lottiefiles/jlottie@workspace:."
+  resolution: "@krystofpiorecky/jlottie@workspace:."
   dependencies:
     "@babel/core": 7.14.3
     "@babel/preset-env": 7.14.4

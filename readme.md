@@ -1,3 +1,5 @@
+!!! this is a fork of the original @lottiefiles/jlottie intended to fix some issues
+
 # jLottie
 
 <p align="center">
